@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_facilitator/firebase_facilitator.dart';
-import 'package:firebase_facilitator_example/pages/write_example_page.dart';
+import 'package:firebase_facilitator_example/pages/read_example_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +14,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MaterialApp(home: WriteExamplePage()));
+  runApp(const MaterialApp(home: ReadExamplePage()));
 }
 
 class MyApp extends StatefulWidget {

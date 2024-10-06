@@ -1,22 +1,21 @@
-import 'dart:developer';
-
 import 'package:firebase_facilitator_example/helper/operation_runner.dart';
+import 'package:firebase_facilitator_example/repository/read_repos_example.dart';
 import 'package:firebase_facilitator_example/repository/write_repos_example.dart';
 import 'package:flutter/material.dart';
 
 /// A page widget that provides examples of writing and deleting data
 /// from a Firestore collection. This class demonstrates how to interact
 /// with Firestore through a repository pattern and provides basic UI feedback.
-class WriteExamplePage extends StatefulWidget {
-  const WriteExamplePage({super.key});
+class ReadExamplePage extends StatefulWidget {
+  const ReadExamplePage({super.key});
 
   @override
-  State<WriteExamplePage> createState() => _WriteExamplePageState();
+  State<ReadExamplePage> createState() => _ReadExamplePageState();
 }
 
 /// State class for [WriteExamplePage] that manages interactions with
 /// the repository for saving and deleting documents.
-class _WriteExamplePageState extends State<WriteExamplePage> implements OperationCheckerService {
+class _ReadExamplePageState extends State<ReadExamplePage> implements OperationCheckerService {
   late final OperationRunner runner;
 
   /// Callback to handle a failed operation.
@@ -24,15 +23,15 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
   /// [exception] contains the error message returned by the failed operation.
   @override
   void onFailed(String exception) {
-    log("Operation failed: $exception");
+    print("Operation failed: ${exception.toString()}");
   }
 
   /// Callback to handle a successful operation.
   ///
   /// [message] contains the success message returned by the successful operation.
   @override
-  void onSuccess(String message) {
-    log("Operation successful: $message");
+  void onSuccess(dynamic message) {
+    print("Operation successful: ${message.toString()}");
   }
 
   @override
@@ -64,12 +63,23 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
             const SizedBox(height: 16),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Text("Click the button below to delete data from the collection:"),
+              child: Text("Click the button below to all data from the collection:"),
             ),
             MaterialButton(
               color: Colors.red,
               textColor: Colors.white,
-              onPressed: _onDeleteDataPressed,
+              onPressed: _onFetchAllDocumentsPressed,
+              child: const Text('Delete Data'),
+            ),
+            const SizedBox(height: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: Text("Click the button below to  data from the collection by id:"),
+            ),
+            MaterialButton(
+              color: Colors.red,
+              textColor: Colors.white,
+              onPressed: _onFetchByIdPressed,
               child: const Text('Delete Data'),
             ),
           ],
@@ -89,14 +99,17 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
     runner.runOperation(writeReposExample.saveDocument(data: {"id": "id_example", "name": "john"}));
   }
 
-  /// Triggered when the "Delete Data" button is pressed.
-  ///
-  /// This method initiates the process of deleting a document from the Firestore
-  /// collection using the [WriteReposExample] class and handles the operation result.
-  void _onDeleteDataPressed() {
-    WriteReposExample writeReposExample = WriteReposExample();
+  void _onFetchByIdPressed() async {
+    ReadReposExample writeReposExample = ReadReposExample();
+    final fetchByIdResult = await writeReposExample.fetchDocumentById(docId: 'id_example');
 
-    // Attempt to delete a document from the Firestore collection
-    runner.runOperation(writeReposExample.deleteDocument(documentId: 'id_example'));
+    print(fetchByIdResult);
+  }
+
+  void _onFetchAllDocumentsPressed() async {
+    ReadReposExample writeReposExample = ReadReposExample();
+    final fetchAllDocumentResult = await writeReposExample.fetchAllDocuments();
+    print(fetchAllDocumentResult);
+    // runner.runOperation(fetchAllDocumentResult);
   }
 }

@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'auth_service.dart';
 import 'firestore_read_service.dart';
 import 'firestore_write_service.dart';
@@ -29,7 +27,7 @@ mixin FirestoreReadRepository {
   /// [docId]: The ID of the document to fetch.
   ///
   /// Returns a Future of DocumentSnapshot containing the document data.
-  Future<DocumentSnapshot<Object?>> fetchDocumentById({required String docId}) async {
+  Future<Map<String, dynamic>> fetchDocumentById({required String docId}) async {
     // Log the start of the fetch operation
     final now = DateTime.now();
     loggerService?.log("⌛ Fetching document with ID $docId in progress");
@@ -37,7 +35,7 @@ mixin FirestoreReadRepository {
     try {
       // Fetch document from Firestore
       final result = await firestoreReadService.fetchDocumentById(collection, docId);
-      return result;
+      return result.data() as Map<String, dynamic>;
     } catch (e) {
       // Log any error encountered during the fetch
       final errorMessage = 'Error fetching document with ID $docId';
