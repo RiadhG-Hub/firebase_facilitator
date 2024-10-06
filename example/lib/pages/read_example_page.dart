@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_facilitator_example/helper/operation_runner.dart';
 import 'package:firebase_facilitator_example/repository/read_repos_example.dart';
 import 'package:firebase_facilitator_example/repository/write_repos_example.dart';
@@ -9,7 +11,7 @@ import 'package:uuid/uuid.dart';
 /// This class provides user-friendly UI feedback and executes operations
 /// through an [OperationRunner].
 class ReadExamplePage extends StatefulWidget {
-  const ReadExamplePage({Key? key}) : super(key: key);
+  const ReadExamplePage({super.key});
 
   @override
   State<ReadExamplePage> createState() => _ReadExamplePageState();
@@ -17,12 +19,14 @@ class ReadExamplePage extends StatefulWidget {
 
 /// State class for [ReadExamplePage] that manages interactions with
 /// Firestore for adding, fetching all, and fetching by document ID.
-class _ReadExamplePageState extends State<ReadExamplePage> implements OperationCheckerService {
+class _ReadExamplePageState extends State<ReadExamplePage>
+    implements OperationCheckerService {
   late final OperationRunner runner;
 
   @override
   void initState() {
-    runner = OperationRunner(this); // Initialize the operation runner with the service callback
+    runner = OperationRunner(
+        this); // Initialize the operation runner with the service callback
     super.initState();
   }
 
@@ -31,7 +35,7 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
   /// [exception] contains the error message returned by the failed operation.
   @override
   void onFailed(dynamic exception) {
-    print("Operation failed: ${exception.toString()}");
+    log("Operation failed: ${exception.toString()}");
   }
 
   /// Callback to handle a successful operation.
@@ -39,7 +43,7 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
   /// [message] contains the success message returned by the successful operation.
   @override
   void onSuccess(dynamic message) {
-    print("Operation successful: ${message.toString()}");
+    log("Operation successful: ${message.toString()}");
   }
 
   @override
@@ -98,7 +102,8 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
     WriteReposExample writeReposExample = WriteReposExample();
     // Add a new document with sample data to the Firestore collection
     runner.runOperation(
-      writeReposExample.saveDocument(data: {"id": const Uuid().v4(), "name": "john"}),
+      writeReposExample
+          .saveDocument(data: {"id": const Uuid().v4(), "name": "john"}),
     );
   }
 
@@ -110,7 +115,8 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
     ReadReposExample readReposExample = ReadReposExample();
 
     // Fetch the document by ID from Firestore
-    final fetchByIdResult = readReposExample.fetchDocumentById(docId: 'id_example');
+    final fetchByIdResult =
+        readReposExample.fetchDocumentById(docId: 'id_example');
     runner.runOperation(fetchByIdResult);
   }
 

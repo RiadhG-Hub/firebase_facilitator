@@ -16,7 +16,8 @@ class WriteExamplePage extends StatefulWidget {
 
 /// State class for [WriteExamplePage] that manages interactions with
 /// the repository for saving and deleting documents.
-class _WriteExamplePageState extends State<WriteExamplePage> implements OperationCheckerService {
+class _WriteExamplePageState extends State<WriteExamplePage>
+    implements OperationCheckerService {
   late final OperationRunner runner;
 
   /// Callback to handle a failed operation.
@@ -53,7 +54,8 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
           children: [
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Text("Click the button below to add data to the collection:"),
+              child:
+                  Text("Click the button below to add data to the collection:"),
             ),
             MaterialButton(
               color: Colors.blue,
@@ -64,7 +66,8 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
             const SizedBox(height: 16),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Text("Click the button below to delete data from the collection:"),
+              child: Text(
+                  "Click the button below to delete data from the collection:"),
             ),
             MaterialButton(
               color: Colors.red,
@@ -86,7 +89,8 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
     WriteReposExample writeReposExample = WriteReposExample();
 
     // Attempt to add a new document to the Firestore collection
-    runner.runOperation(writeReposExample.saveDocument(data: {"id": "id_example", "name": "john"}));
+    runner.runOperation(writeReposExample
+        .saveDocument(data: {"id": "id_example", "name": "john"}));
   }
 
   /// Triggered when the "Delete Data" button is pressed.
@@ -97,6 +101,7 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
     WriteReposExample writeReposExample = WriteReposExample();
 
     // Attempt to delete a document from the Firestore collection
-    runner.runOperation(writeReposExample.deleteDocument(documentId: 'id_example'));
+    runner.runOperation(
+        writeReposExample.deleteDocument(documentId: 'id_example'));
   }
 }

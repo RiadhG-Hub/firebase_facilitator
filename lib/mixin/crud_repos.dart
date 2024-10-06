@@ -27,14 +27,16 @@ mixin FirestoreReadRepository {
   /// [docId]: The ID of the document to fetch.
   ///
   /// Returns a Future of DocumentSnapshot containing the document data.
-  Future<Map<String, dynamic>> fetchDocumentById({required String docId}) async {
+  Future<Map<String, dynamic>> fetchDocumentById(
+      {required String docId}) async {
     // Log the start of the fetch operation
     final now = DateTime.now();
     loggerService?.log("⌛ Fetching document with ID $docId in progress");
 
     try {
       // Fetch document from Firestore
-      final result = await firestoreReadService.fetchDocumentById(collection, docId);
+      final result =
+          await firestoreReadService.fetchDocumentById(collection, docId);
       return result.data() as Map<String, dynamic>;
     } catch (e) {
       // Log any error encountered during the fetch
@@ -61,7 +63,8 @@ mixin FirestoreReadRepository {
 
     try {
       // Fetch all documents from Firestore
-      final documents = await firestoreReadService.fetchAllDocuments(collection);
+      final documents =
+          await firestoreReadService.fetchAllDocuments(collection);
       return documents;
     } catch (e) {
       // Log any error encountered during the fetch
@@ -109,7 +112,8 @@ mixin FirestoreWriteRepository {
       // Save document to Firestore
       await firestoreWriteService.saveDocument(collection, data);
       // Log the success of the operation
-      loggerService?.log('✅ Document ${data.containsKey('id') ? data['id'] : "New document"} saved successfully');
+      loggerService?.log(
+          '✅ Document ${data.containsKey('id') ? data['id'] : "New document"} saved successfully');
     } catch (e) {
       // Log any error encountered during the save
       const errorMessage = 'Error saving document';

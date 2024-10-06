@@ -28,9 +28,11 @@ class OperationRunner {
   /// If the operation succeeds, [onSuccess] is called; otherwise, [onFailed] is triggered.
   void runOperation(Future<dynamic> operation) {
     operation.then((result) {
-      _operationCheckerService.onSuccess(result ?? "Operation completed successfully");
+      _operationCheckerService
+          .onSuccess(result ?? "Operation completed successfully");
     }).catchError((error) {
-      _operationCheckerService.onFailed("Operation failed with error: ${error.toString()}");
+      _operationCheckerService
+          .onFailed("Operation failed with error: ${error.toString()}");
     });
   }
 }

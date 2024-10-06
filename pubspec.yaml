@@ -1,7 +1,9 @@
 name: firebase_facilitator
-description: "A new Flutter project."
+description: "A Firebase CRUD package simplifying Firestore operations with optional logging and error tracking, designed for scalable and maintainable Flutter apps."
 version: 0.0.1
-homepage:
+repository: https://github.com/riadhrahma/firebase_facilitator
+issue_tracker: https://github.com/riadhrahma/firebase_facilitator/issues
+topics: [firebase, crud]
 
 environment:
   sdk: ^3.5.3
@@ -12,13 +14,19 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  web: ^0.5.1
-  plugin_platform_interface: ^2.0.2
-  firebase_core: ^3.4.0
-  firebase_auth: ^5.2.0
-  fake_cloud_firestore: ^3.0.3
-  cloud_firestore: ^5.4.0
 
+
+  cloud_firestore: ^5.4.4
+  fake_cloud_firestore: ^3.0.3
+  firebase_auth: ^5.3.1
+  firebase_core: ^3.6.0
+  logger: ^2.4.0
+
+false_secrets:
+  - /example/lib/firebase_options.dart
+  - /example/android/app/google-services.json
+  - /example/ios/Runner/GoogleService-Info.plist
+  - /example/macos/Runner/GoogleService-Info.plist
 
 
 dev_dependencies:
