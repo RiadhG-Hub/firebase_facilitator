@@ -2,21 +2,29 @@ import 'package:firebase_facilitator_example/helper/operation_runner.dart';
 import 'package:firebase_facilitator_example/repository/read_repos_example.dart';
 import 'package:firebase_facilitator_example/repository/write_repos_example.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
-/// A page widget that provides examples of writing and deleting data
-/// from a Firestore collection. This class demonstrates how to interact
-/// with Firestore through a repository pattern and provides basic UI feedback.
+/// A page widget that demonstrates examples of reading and writing data
+/// to and from a Firestore collection using a repository pattern.
+/// This class provides user-friendly UI feedback and executes operations
+/// through an [OperationRunner].
 class ReadExamplePage extends StatefulWidget {
-  const ReadExamplePage({super.key});
+  const ReadExamplePage({Key? key}) : super(key: key);
 
   @override
   State<ReadExamplePage> createState() => _ReadExamplePageState();
 }
 
-/// State class for [WriteExamplePage] that manages interactions with
-/// the repository for saving and deleting documents.
+/// State class for [ReadExamplePage] that manages interactions with
+/// Firestore for adding, fetching all, and fetching by document ID.
 class _ReadExamplePageState extends State<ReadExamplePage> implements OperationCheckerService {
   late final OperationRunner runner;
+
+  @override
+  void initState() {
+    runner = OperationRunner(this); // Initialize the operation runner with the service callback
+    super.initState();
+  }
 
   /// Callback to handle a failed operation.
   ///
@@ -35,16 +43,10 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
   }
 
   @override
-  void initState() {
-    runner = OperationRunner(this);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Firestore Write Example"),
+        title: const Text("Firestore Operations Example"),
       ),
       body: Center(
         child: Column(
@@ -52,35 +54,35 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
           children: [
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Text("Click the button below to add data to the collection:"),
+              child: Text("Add a new document to the Firestore collection:"),
             ),
             MaterialButton(
               color: Colors.blue,
               textColor: Colors.white,
               onPressed: _onAddDataPressed,
-              child: const Text('Add Data'),
+              child: const Text('Add New Document'),
             ),
             const SizedBox(height: 16),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Text("Click the button below to all data from the collection:"),
+              child: Text("Fetch all documents from the Firestore collection:"),
             ),
             MaterialButton(
-              color: Colors.red,
+              color: Colors.green,
               textColor: Colors.white,
               onPressed: _onFetchAllDocumentsPressed,
-              child: const Text('Delete Data'),
+              child: const Text('Fetch All Documents'),
             ),
             const SizedBox(height: 16),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Text("Click the button below to  data from the collection by id:"),
+              child: Text("Fetch a document by its ID:"),
             ),
             MaterialButton(
-              color: Colors.red,
+              color: Colors.orange,
               textColor: Colors.white,
               onPressed: _onFetchByIdPressed,
-              child: const Text('Delete Data'),
+              child: const Text('Fetch Document by ID'),
             ),
           ],
         ),
@@ -88,28 +90,39 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
     );
   }
 
-  /// Triggered when the "Add Data" button is pressed.
+  /// Handles adding a new document to the Firestore collection.
   ///
-  /// This method initiates the process of adding a new document to the Firestore
-  /// collection using the [WriteReposExample] class and handles the operation result.
+  /// This method triggers the document saving process using [WriteReposExample],
+  /// and the result is passed through the [OperationRunner] for further handling.
   void _onAddDataPressed() {
     WriteReposExample writeReposExample = WriteReposExample();
-
-    // Attempt to add a new document to the Firestore collection
-    runner.runOperation(writeReposExample.saveDocument(data: {"id": "id_example", "name": "john"}));
+    // Add a new document with sample data to the Firestore collection
+    runner.runOperation(
+      writeReposExample.saveDocument(data: {"id": const Uuid().v4(), "name": "john"}),
+    );
   }
 
+  /// Handles fetching a document from Firestore by its document ID.
+  ///
+  /// This method uses [ReadReposExample] to retrieve a document by ID and
+  /// triggers the operation via [OperationRunner].
   void _onFetchByIdPressed() async {
-    ReadReposExample writeReposExample = ReadReposExample();
-    final fetchByIdResult = writeReposExample.fetchDocumentById(docId: 'id_example');
+    ReadReposExample readReposExample = ReadReposExample();
 
+    // Fetch the document by ID from Firestore
+    final fetchByIdResult = readReposExample.fetchDocumentById(docId: 'id_example');
     runner.runOperation(fetchByIdResult);
   }
 
+  /// Handles fetching all documents from the Firestore collection.
+  ///
+  /// This method uses [ReadReposExample] to retrieve all documents and
+  /// triggers the operation via [OperationRunner].
   void _onFetchAllDocumentsPressed() async {
-    ReadReposExample writeReposExample = ReadReposExample();
-    final fetchAllDocumentResult = writeReposExample.fetchAllDocuments();
+    ReadReposExample readReposExample = ReadReposExample();
 
-    runner.runOperation(fetchAllDocumentResult);
+    // Fetch all documents from Firestore
+    final fetchAllDocumentsResult = readReposExample.fetchAllDocuments();
+    runner.runOperation(fetchAllDocumentsResult);
   }
 }
