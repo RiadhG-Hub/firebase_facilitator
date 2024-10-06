@@ -1,11 +1,20 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_facilitator/firebase_facilitator.dart';
+import 'package:firebase_facilitator_example/pages/write_example_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MaterialApp(home: WriteExamplePage()));
 }
 
 class MyApp extends StatefulWidget {
@@ -31,8 +40,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _firebaseFacilitatorPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      platformVersion = await _firebaseFacilitatorPlugin.getPlatformVersion() ?? 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
