@@ -23,7 +23,7 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
   ///
   /// [exception] contains the error message returned by the failed operation.
   @override
-  void onFailed(String exception) {
+  void onFailed(dynamic exception) {
     log("Operation failed: $exception");
   }
 
@@ -31,7 +31,7 @@ class _WriteExamplePageState extends State<WriteExamplePage> implements Operatio
   ///
   /// [message] contains the success message returned by the successful operation.
   @override
-  void onSuccess(String message) {
+  void onSuccess(dynamic message) {
     log("Operation successful: $message");
   }
 

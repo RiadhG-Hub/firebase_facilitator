@@ -6,12 +6,12 @@ abstract class OperationCheckerService {
   /// Called when an operation completes successfully.
   ///
   /// [message] is a description of the successful operation.
-  void onSuccess(String message);
+  void onSuccess(dynamic message);
 
   /// Called when an operation fails.
   ///
   /// [exception] contains the error message from the failed operation.
-  void onFailed(String exception);
+  void onFailed(dynamic exception);
 }
 
 /// Helper class to manage the execution of asynchronous Firestore operations.

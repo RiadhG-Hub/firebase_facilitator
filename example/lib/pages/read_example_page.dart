@@ -22,7 +22,7 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
   ///
   /// [exception] contains the error message returned by the failed operation.
   @override
-  void onFailed(String exception) {
+  void onFailed(dynamic exception) {
     print("Operation failed: ${exception.toString()}");
   }
 
@@ -101,15 +101,15 @@ class _ReadExamplePageState extends State<ReadExamplePage> implements OperationC
 
   void _onFetchByIdPressed() async {
     ReadReposExample writeReposExample = ReadReposExample();
-    final fetchByIdResult = await writeReposExample.fetchDocumentById(docId: 'id_example');
+    final fetchByIdResult = writeReposExample.fetchDocumentById(docId: 'id_example');
 
-    print(fetchByIdResult);
+    runner.runOperation(fetchByIdResult);
   }
 
   void _onFetchAllDocumentsPressed() async {
     ReadReposExample writeReposExample = ReadReposExample();
-    final fetchAllDocumentResult = await writeReposExample.fetchAllDocuments();
-    print(fetchAllDocumentResult);
-    // runner.runOperation(fetchAllDocumentResult);
+    final fetchAllDocumentResult = writeReposExample.fetchAllDocuments();
+
+    runner.runOperation(fetchAllDocumentResult);
   }
 }
