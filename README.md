@@ -1,76 +1,109 @@
-# device_info_plus
+# firebase_facilitator_example
 
-[![pub package](https://img.shields.io/pub/v/device_info_plus.svg)](https://pub.dev/packages/device_info_plus)
-[![pub points](https://img.shields.io/pub/points/device_info_plus?color=2E8B57&label=pub%20points)](https://pub.dev/packages/device_info_plus/score)
-[![device_info_plus](https://github.com/fluttercommunity/plus_plugins/actions/workflows/device_info_plus.yaml/badge.svg)](https://github.com/fluttercommunity/plus_plugins/actions/workflows/device_info_plus.yaml)
+[![pub package](https://img.shields.io/pub/v/firebase_facilitator.svg)](https://pub.dev/packages/firebase_facilitator)
+[![pub points](https://img.shields.io/pub/points/firebase_facilitator?color=2E8B57&label=pub%20points)](https://pub.dev/packages/firebase_facilitator/score)
+[![firebase_facilitator](https://github.com/yourgithub/firebase_facilitator/actions/workflows/firebase_facilitator.yaml/badge.svg)](https://github.com/yourgithub/firebase_facilitator/actions/workflows/firebase_facilitator.yaml)
 
-[<img src="../../../assets/flutter-favorite-badge.png" width="100" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
+[<img src="https://flutter.dev/assets/flutter-lockup-bg.jpg" width="100" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
 
-Get current device information from within the Flutter application.
+A package that provides mixins for facilitating CRUD operations with Firestore in Flutter applications.
 
 ## Platform Support
 
-| Android | iOS | MacOS | Web | Linux | Windows |
-| :-----: | :-: | :---: | :-: | :---: | :-----: |
-|   ✅    | ✅  |  ✅   | ✅  |  ✅   |   ✅    |
+| Android | iOS | Web | MacOS | Windows | Linux |
+| :-----: | :-: | :-: | :---: | :-----: | :---: |
+|   ✅    | ✅  | ✅  |  ✅   |   ✅    |   ✅   |
 
 ## Requirements
 
 - Flutter >=3.3.0
-- Dart >=3.3.0 <4.0.0
-- iOS >=12.0
-- MacOS >=10.14
-- Android `compileSDK` 34
-- Java 17
-- Android Gradle Plugin >=8.3.0
-- Gradle wrapper >=8.4
+- cloud_firestore: ^5.4.4
+- fake_cloud_firestore: ^3.0.3
+- firebase_auth: ^5.3.1
+- firebase_core: ^3.6.0
+- logger: ^2.4.0
 
 # Usage
 
-Import `package:device_info_plus/device_info_plus.dart`, instantiate `DeviceInfoPlugin`
-and use the Android and iOS, Web getters to get platform-specific device
-information.
+Import the `firebase_facilitator` package, implement the mixins for CRUD operations and logger services, and use the repository to perform Firestore operations.
 
 Example:
 
 ```dart
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_facilitator/mixin/crud_repos.dart';
+import 'package:firebase_facilitator/mixin/firestore_read_service.dart';
+import 'package:firebase_facilitator/mixin/firestore_write_service.dart';
+import 'package:firebase_facilitator/mixin/logger_service.dart';
 
-DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-print('Running on ${androidInfo.model}');  // e.g. "Moto G (4)"
+class ReadWriteReposExample
+    with FirestoreReadRepository, FirestoreWriteRepository {
+  @override
+  FirestoreReadService get firestoreReadService => FirestoreServiceImpl();
 
-IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-print('Running on ${iosInfo.utsname.machine}');  // e.g. "iPod7,1"
+  @override
+  FirestoreWriteService get firestoreWriteService =>
+      FirestoreWriteServiceImpl();
 
-WebBrowserInfo webBrowserInfo = await deviceInfo.webBrowserInfo;
-print('Running on ${webBrowserInfo.userAgent}');  // e.g. "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
+  @override
+  LoggerService? get loggerService => LoggerServiceImpl(true);
+
+  @override
+  String get collection => "collection_example";
+}
 ```
 
-The plugin provides a `data` method that returns platform-specific device
-information in a generic way, which can be used for crash-reporting purposes.
 
-However, the data provided by this `data` method is currently not serializable
-(i.e. it is not 100% JSON compatible) and shouldn't be treated as such.
+
+
+Example Widget:
+
+Example:
 
 ```dart
-import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
-final deviceInfoPlugin = DeviceInfoPlugin();
-final deviceInfo = await deviceInfoPlugin.deviceInfo;
-final allInfo = deviceInfo.data;
+class ReadWriteExamplePage extends StatefulWidget {
+  const ReadWriteExamplePage({super.key});
+
+  @override
+  State<ReadWriteExamplePage> createState() => _ReadWriteExamplePageState();
+}
+
+class _ReadWriteExamplePageState extends State<ReadWriteExamplePage> {
+  ReadWriteReposExample readWriteReposExample = ReadWriteReposExample();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Firestore Operations Example")),
+      body: Column(
+        children: [
+          MaterialButton(
+            color: Colors.blue,
+            onPressed: _onAddDataPressed,
+            child: const Text('Add Data'),
+          ),
+          MaterialButton(
+            color: Colors.green,
+            onPressed: _onFetchAllDocumentsPressed,
+            child: const Text('Fetch All Documents'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onAddDataPressed() {
+    readWriteReposExample.saveDocument(data: {"id": const Uuid().v4(), "name": "john"});
+  }
+
+  void _onFetchAllDocumentsPressed() {
+    readWriteReposExample.fetchAllDocuments();
+  }
+}
 ```
 
-### Android
+The repository handles Firestore operations, including adding, fetching, and deleting documents.
 
-To get serial number on Android your app needs to meet one of official [requirements](https://developer.android.com/reference/android/os/Build#getSerial()).
-In case the app doesn't meet any of requirements plugin will return `unknown`.
-
-### iOS
-
-The `name` property exposes the assigned device name by the owner. This value is obtained from the property `UIDevice.current.name`.
-This property requires special entitlement [com.apple.developer.device-information.user-assigned-device-name](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_device-information_user-assigned-device-name) in iOS 16 and later, otherwise, the property `name` will always be `iPad` or `iPhone`.
-
-## Learn more
-
-- [API Documentation](https://pub.dev/documentation/device_info_plus/latest/device_info_plus/device_info_plus-library.html)
