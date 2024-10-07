@@ -1,33 +1,29 @@
-# firebase_facilitator_example
 
-[![pub package](https://img.shields.io/pub/v/firebase_facilitator.svg)](https://pub.dev/packages/firebase_facilitator)
-[![pub points](https://img.shields.io/pub/points/firebase_facilitator?color=2E8B57&label=pub%20points)](https://pub.dev/packages/firebase_facilitator/score)
-[![firebase_facilitator](https://github.com/yourgithub/firebase_facilitator/actions/workflows/firebase_facilitator.yaml/badge.svg)](https://github.com/yourgithub/firebase_facilitator/actions/workflows/firebase_facilitator.yaml)
 
-[<img src="https://flutter.dev/assets/flutter-lockup-bg.jpg" width="100" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
+# firebase\_facilitator
 
-A package that provides mixins for facilitating CRUD operations with Firestore in Flutter applications.
+[![pub package version](https://img.shields.io/pub/v/firebase_facilitator.svg)](https://pub.dev/packages/firebase_facilitator)[![pub points](https://img.shields.io/pub/points/firebase_facilitator?color=2E8B57&label=pub%20points)](https://pub.dev/packages/firebase_facilitator/score)
+
+**firebase\_facilitator** is a versatile package that streamlines CRUD operations with Firestore in Flutter applications. It provides mixins for handling common tasks like Create, Read, Update, and Delete, along with optional logging functionality.
 
 ## Platform Support
 
-| Android | iOS | Web | MacOS | Windows | Linux |
-| :-----: | :-: | :-: | :---: | :-----: | :---: |
-|   ✅    | ✅  | ✅  |  ✅   |   ✅    |   ✅   |
+| Android | iOS | Web | macOS | Windows | Linux |
+| --- | --- | --- | --- | --- | --- |
+| ✅   | ✅   | ✅   | ✅   | ✅   | ✅   |
 
 ## Requirements
 
-- Flutter >=3.3.0
-- cloud_firestore: ^5.4.4
-- fake_cloud_firestore: ^3.0.3
-- firebase_auth: ^5.3.1
-- firebase_core: ^3.6.0
-- logger: ^2.4.0
+*   Flutter >= 3.3.0
+*   `cloud_firestore: ^5.4.4`
+*   `fake_cloud_firestore: ^3.0.3`
+*   `firebase_auth: ^5.3.1` (optional, for authentication)
+*   `firebase_core: ^3.6.0`
+*   `logger: ^2.4.0` (optional, for logging)
 
-# Usage
+## Usage
 
-Import the `firebase_facilitator` package, implement the mixins for CRUD operations and logger services, and use the repository to perform Firestore operations.
-
-Example:
+To use the **firebase\_facilitator** package, simply import the necessary mixins and integrate them into your data repository class for seamless Firestore operations.
 
 ```dart
 import 'package:firebase_facilitator/mixin/crud_repos.dart';
@@ -45,19 +41,17 @@ class ReadWriteReposExample
       FirestoreWriteServiceImpl();
 
   @override
-  LoggerService? get loggerService => LoggerServiceImpl(true);
+  LoggerService? get loggerService => LoggerServiceImpl(true); // Optional
 
   @override
   String get collection => "collection_example";
 }
+    
 ```
 
+## Example Widget
 
-
-
-Example Widget:
-
-Example:
+This example demonstrates how to interact with Firestore using the **ReadWriteReposExample** repository for adding and fetching documents.
 
 ```dart
 import 'dart:developer';
@@ -72,7 +66,7 @@ class ReadWriteExamplePage extends StatefulWidget {
 }
 
 class _ReadWriteExamplePageState extends State<ReadWriteExamplePage> {
-  ReadWriteReposExample readWriteReposExample = ReadWriteReposExample();
+  final ReadWriteReposExample readWriteReposExample = ReadWriteReposExample();
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +97,7 @@ class _ReadWriteExamplePageState extends State<ReadWriteExamplePage> {
     readWriteReposExample.fetchAllDocuments();
   }
 }
+    
 ```
 
-The repository handles Firestore operations, including adding, fetching, and deleting documents.
-
+The `ReadWriteReposExample` class handles Firestore operations like adding, fetching, and deleting documents, allowing developers to focus on business logic while abstracting the complexity of Firestore.

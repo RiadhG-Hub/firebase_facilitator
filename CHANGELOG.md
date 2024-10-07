@@ -8,3 +8,9 @@
 
 ## 0.0.3
 ## improve documentation
+
+## 0.0.4
+## improve documentation
+
+## 0.0.5
+## improve example
