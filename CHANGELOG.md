@@ -14,3 +14,9 @@
 
 ## 0.0.5
 ## improve example
+
+## 0.0.6
+## improve example
+
+## 0.0.7
+## group failures and success 

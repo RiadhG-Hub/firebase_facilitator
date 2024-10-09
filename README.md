@@ -2,6 +2,9 @@
 
 # firebase\_facilitator
 
+
+
+
 [![pub package version](https://img.shields.io/pub/v/firebase_facilitator.svg)](https://pub.dev/packages/firebase_facilitator)[![pub points](https://img.shields.io/pub/points/firebase_facilitator?color=2E8B57&label=pub%20points)](https://pub.dev/packages/firebase_facilitator/score)
 
 **firebase\_facilitator** is a versatile package that streamlines CRUD operations with Firestore in Flutter applications. It provides mixins for handling common tasks like Create, Read, Update, and Delete, along with optional logging functionality.
