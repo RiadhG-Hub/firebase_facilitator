@@ -46,6 +46,12 @@ class _ReadExamplePageState extends State<ReadExamplePage>
     log("Operation successful: ${message.toString()}");
   }
 
+  /// Callback to handle in progress operation.
+  @override
+  void inProgress() {
+    log("operation in progress");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

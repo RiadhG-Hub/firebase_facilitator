@@ -61,6 +61,12 @@ class _ReadWriteExamplePageState extends State<ReadWriteExamplePage>
     log("Operation failed: ${exception.toString()}");
   }
 
+  /// Callback to handle in progress operation.
+  @override
+  void inProgress() {
+    log("operation in progress");
+  }
+
   /// Callback method to handle a successful operation.
   ///
   /// This method is triggered when an operation completes successfully.

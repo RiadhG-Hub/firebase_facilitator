@@ -28,6 +28,12 @@ class _WriteExamplePageState extends State<WriteExamplePage>
     log("Operation failed: $exception");
   }
 
+  /// Callback to handle in progress operation.
+  @override
+  void inProgress() {
+    log("operation in progress");
+  }
+
   /// Callback to handle a successful operation.
   ///
   /// [message] contains the success message returned by the successful operation.

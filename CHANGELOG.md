@@ -20,3 +20,6 @@
 
 ## 0.0.7
 ## group failures and success 
+
+## 0.0.8
+## fix fetch by id, add in progress state

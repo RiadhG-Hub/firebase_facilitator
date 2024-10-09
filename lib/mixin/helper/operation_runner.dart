@@ -12,6 +12,10 @@ abstract class OperationCheckerService {
   ///
   /// [exception] contains the error message from the failed operation.
   void onFailed(dynamic exception);
+
+  /// Called when an operation in progress.
+
+  void inProgress();
 }
 
 /// Helper class to manage the execution of asynchronous Firestore operations.
@@ -27,6 +31,7 @@ class OperationRunner {
   ///
   /// If the operation succeeds, [onSuccess] is called; otherwise, [onFailed] is triggered.
   void runOperation(Future<dynamic> operation) {
+    _operationCheckerService.inProgress();
     operation.then((result) {
       _operationCheckerService
           .onSuccess(result ?? "Operation completed successfully");

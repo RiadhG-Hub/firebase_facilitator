@@ -29,7 +29,7 @@ mixin FirestoreReadRepository {
   /// [docId]: The ID of the document to fetch.
   ///
   /// Returns a Future of DocumentSnapshot containing the document data.
-  Future<Map<String, dynamic>> fetchDocumentById(
+  Future<Map<String, dynamic>?> fetchDocumentById(
       {required String docId}) async {
     // Log the start of the fetch operation
     final now = DateTime.now();
@@ -39,7 +39,7 @@ mixin FirestoreReadRepository {
       // Fetch document from Firestore
       final result =
           await firestoreReadService.fetchDocumentById(collection, docId);
-      return result.data() as Map<String, dynamic>;
+      return result.data() as Map<String, dynamic>?;
     } catch (e) {
       // Log any error encountered during the fetch
       final errorMessage = 'Error fetching document with ID $docId';
