@@ -23,3 +23,6 @@
 
 ## 0.0.8
 ## fix fetch by id, add in progress state
+
+## 0.0.9
+## update demo usage
