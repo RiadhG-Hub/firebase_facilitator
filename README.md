@@ -57,9 +57,15 @@ class ItemFirestoreService with FirestoreReadRepository, FirestoreWriteRepositor
   String get collection => "items";
 }
 
-/// `ItemRepository` acts as an abstraction layer over the Firestore service,
-/// providing specific methods to interact with `ItemModel` objects in the Firestore
-/// collection.
+```
+
+
+`ItemRepository` acts as an abstraction layer over the Firestore service,
+providing specific methods to interact with `ItemModel` objects in the Firestore
+collection.
+
+```dart
+
 class ItemRepository {
   final ItemFirestoreService firestoreService;
 
@@ -103,6 +109,13 @@ class ItemRepository {
   }
 }
 
+
+```
+
+`ItemModel` represents an item in the "items" collection, with fields for `id`, `name`,
+and `price`.
+
+```dart
 /// `ItemModel` represents an item in the "items" collection, with fields for `id`, `name`,
 /// and `price`.
 class ItemModel {

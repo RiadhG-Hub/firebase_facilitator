@@ -1,5 +1,6 @@
 import 'package:firebase_facilitator/mixin/crud_repos.dart';
 import 'package:firebase_facilitator/mixin/firestore_read_service.dart';
+import 'package:firebase_facilitator/mixin/firestore_storage_service.dart';
 import 'package:firebase_facilitator/mixin/firestore_write_service.dart';
 import 'package:firebase_facilitator/mixin/logger_service.dart';
 
@@ -7,14 +8,19 @@ import 'package:firebase_facilitator/mixin/logger_service.dart';
 /// It uses the `FirestoreReadRepository` and `FirestoreWriteRepository` mixins to
 /// perform read and write operations, and it provides a logging service for
 /// optional operation logging.
-class ItemFirestoreService with FirestoreReadRepository, FirestoreWriteRepository {
+class ItemFirestoreService
+    with
+        FirestoreReadRepository,
+        FirestoreWriteRepository,
+        FirebaseStorageService {
   /// The Firestore read service implementation, responsible for fetching data from Firestore.
   @override
   FirestoreReadService get firestoreReadService => FirestoreServiceImpl();
 
   /// The Firestore write service implementation, responsible for saving and deleting data in Firestore.
   @override
-  FirestoreWriteService get firestoreWriteService => FirestoreWriteServiceImpl();
+  FirestoreWriteService get firestoreWriteService =>
+      FirestoreWriteServiceImpl();
 
   /// The logger service to track operations. Here it's set to `true`, enabling logging.
   @override
@@ -39,7 +45,8 @@ class ItemRepository {
   /// The method retrieves the raw data from Firestore, converts each document
   /// into a JSON object, and then maps it to a list of `ItemModel` objects.
   Future<List<ItemModel>> fetchAllItems() async {
-    final List<Map<String, dynamic>> rawData = await firestoreService.fetchAllDocuments();
+    final List<Map<String, dynamic>> rawData =
+        await firestoreService.fetchAllDocuments();
     // Convert the Firestore document data into a list of `ItemModel` objects.
     return rawData.map((element) => ItemModel.fromJson(element)).toList();
   }
@@ -57,7 +64,8 @@ class ItemRepository {
   /// The method retrieves the document with the given `itemId`, asserts that it exists,
   /// and then converts it from JSON into an `ItemModel` object.
   Future<ItemModel> fetchItemByID({required String itemId}) async {
-    final Map<String, dynamic>? rawData = await firestoreService.fetchDocumentById(docId: itemId);
+    final Map<String, dynamic>? rawData =
+        await firestoreService.fetchDocumentById(docId: itemId);
     assert(rawData != null, "we can't find the item for you");
     return ItemModel.fromJson(rawData!);
   }
@@ -90,7 +98,8 @@ class ItemModel {
     return ItemModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      price: (json['price'] as num).toDouble(), // Ensure the price is converted to a double.
+      price: (json['price'] as num)
+          .toDouble(), // Ensure the price is converted to a double.
     );
   }
 
