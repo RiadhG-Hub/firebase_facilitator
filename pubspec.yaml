@@ -1,6 +1,6 @@
 name: firebase_facilitator
 description: "A Firebase CRUD package simplifying Firestore operations with optional logging and error tracking, designed for scalable and maintainable Flutter apps."
-version: 1.0.7
+version: 1.0.9
 repository: https://github.com/riadhrahma/firebase_facilitator
 issue_tracker: https://github.com/riadhrahma/firebase_facilitator/issues
 topics: [ firebase, crud ]
