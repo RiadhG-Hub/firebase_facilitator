@@ -14,6 +14,7 @@ class ReadWriteReposExample
 
   @override
   LoggerService? get loggerService => LoggerServiceImpl(false);
+
   @override
   String get collection => "collection_example";
 }

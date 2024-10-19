@@ -2,7 +2,8 @@
 
 # firebase\_facilitator
 
-[![pub package version](https://img.shields.io/pub/v/firebase_facilitator.svg)](https://pub.dev/packages/firebase_facilitator) [![pub points](https://img.shields.io/pub/points/firebase_facilitator?color=2E8B57&label=pub%20points)](https://pub.dev/packages/firebase_facilitator/score)
+[![pub package version](https://img.shields.io/pub/v/firebase_facilitator.svg)](https://pub.dev/packages/firebase_facilitator) [![pub points](https://img.shields.io/pub/points/firebase_facilitator?color=2E8B57&label=pub%20points)](https://pub.dev/packages/firebase_facilitator/score) [![CodeFactor](https://www.codefactor.io/repository/github/riadhg-hub/firebase_facilitator/badge)](https://www.codefactor.io/repository/github/riadhg-hub/firebase_facilitator)
+
 
 **firebase\_facilitator** is a versatile package that streamlines CRUD operations with Firestore in Flutter applications. It provides mixins for handling common tasks like Create, Read, Update, and Delete, along with optional logging functionality.
 
@@ -25,7 +26,7 @@
 
 In this video, we demonstrate how to streamline Firestore CRUD operations in Flutter using the firebase_facilitator package. Learn how to quickly implement Firestore read and write functionality, as well as optional logging, with just a few lines of code. Watch as we create a service to fetch all documents from a Firestore collection and convert them into model objects. This package helps save time and effort, making your Firestore integration more efficient.
 
-[![Everything Is AWESOME](https://i9.ytimg.com/vi_webp/pReLQ-5sTaE/mq2.webp?sqp=CJjOqbgG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEsgZShRMA8=&rs=AOn4CLCYyC5yXhKLpiUNef_6jo8QjPa5BQ)](https://www.youtube.com/embed/pReLQ-5sTaE?si=xII5aDz4lUIXQzEK "Everything Is AWESOME")
+[![Everything Is AWESOME](https://i9.ytimg.com/vi_webp/pReLQ-5sTaE/mq2.webp?sqp=CJjOqbgG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEsgZShRMA8=&rs=AOn4CLCYyC5yXhKLpiUNef_6jo8QjPa5BQ)](https://www.youtube.com/playlist?list=PLUSagxHszGmP4O3RoNo4C6A9-zK0i37Ql "Everything Is AWESOME")
 
 To use the **firebase\_facilitator** package, simply import the necessary mixins and integrate them into your data repository class for seamless Firestore operations.
 
@@ -57,9 +58,15 @@ class ItemFirestoreService with FirestoreReadRepository, FirestoreWriteRepositor
   String get collection => "items";
 }
 
-/// `ItemRepository` acts as an abstraction layer over the Firestore service,
-/// providing specific methods to interact with `ItemModel` objects in the Firestore
-/// collection.
+```
+
+
+`ItemRepository` acts as an abstraction layer over the Firestore service,
+providing specific methods to interact with `ItemModel` objects in the Firestore
+collection.
+
+```dart
+
 class ItemRepository {
   final ItemFirestoreService firestoreService;
 
@@ -103,6 +110,13 @@ class ItemRepository {
   }
 }
 
+
+```
+
+`ItemModel` represents an item in the "items" collection, with fields for `id`, `name`,
+and `price`.
+
+```dart
 /// `ItemModel` represents an item in the "items" collection, with fields for `id`, `name`,
 /// and `price`.
 class ItemModel {

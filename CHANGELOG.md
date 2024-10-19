@@ -10,7 +10,7 @@
 ## improve documentation
 
 ## 0.0.4
-## improve documentation
+ improve documentation
 
 ## 0.0.5
 ## improve example
@@ -26,3 +26,7 @@
 
 ## 0.0.9
 ## update demo usage
+
+## 1.0.1
+## update demo usage
+## add firebase storage service

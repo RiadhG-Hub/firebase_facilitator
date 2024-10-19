@@ -1,109 +1,155 @@
+import 'dart:developer';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_facilitator/mixin/crud_repos.dart';
 import 'package:firebase_facilitator/mixin/firestore_read_service.dart';
 import 'package:firebase_facilitator/mixin/firestore_storage_service.dart';
 import 'package:firebase_facilitator/mixin/firestore_write_service.dart';
 import 'package:firebase_facilitator/mixin/logger_service.dart';
 
-/// `ItemFirestoreService` handles Firestore CRUD operations for the "items" collection.
-/// It uses the `FirestoreReadRepository` and `FirestoreWriteRepository` mixins to
-/// perform read and write operations, and it provides a logging service for
-/// optional operation logging.
+/// `ItemFirestoreService` handles Firestore CRUD operations for the "items" collection,
+/// integrating logging and Firebase storage services.
 class ItemFirestoreService
     with
         FirestoreReadRepository,
         FirestoreWriteRepository,
         FirebaseStorageService {
-  /// The Firestore read service implementation, responsible for fetching data from Firestore.
+  /// Provides the Firestore read service for fetching data.
   @override
   FirestoreReadService get firestoreReadService => FirestoreServiceImpl();
 
-  /// The Firestore write service implementation, responsible for saving and deleting data in Firestore.
+  /// Provides the Firestore write service for saving and deleting data.
   @override
   FirestoreWriteService get firestoreWriteService =>
       FirestoreWriteServiceImpl();
 
-  /// The logger service to track operations. Here it's set to `true`, enabling logging.
+  /// Optional logging service for tracking operations.
   @override
-  LoggerService? get loggerService => LoggerServiceImpl(true); // Optional
+  LoggerService? get loggerService =>
+      LoggerServiceImpl(true); // Set to enable/disable logging
 
-  /// The Firestore collection name that this service operates on.
+  /// Specifies the Firestore collection name.
   @override
   String get collection => "items";
 }
 
-/// `ItemRepository` acts as an abstraction layer over the Firestore service,
-/// providing specific methods to interact with `ItemModel` objects in the Firestore
-/// collection.
+/// Provides methods for interacting with `ItemModel` objects in Firestore.
 class ItemRepository {
+  static const String imagePath = "image_folder";
   final ItemFirestoreService firestoreService;
 
-  /// Constructor that requires an instance of `ItemFirestoreService` to be passed in.
+  /// Requires an `ItemFirestoreService` instance.
   ItemRepository(this.firestoreService);
 
-  /// Fetches all items from the "items" collection.
-  ///
-  /// The method retrieves the raw data from Firestore, converts each document
-  /// into a JSON object, and then maps it to a list of `ItemModel` objects.
+  /// Fetches all items from Firestore and returns them as a list of `ItemModel`.
   Future<List<ItemModel>> fetchAllItems() async {
-    final List<Map<String, dynamic>> rawData =
-        await firestoreService.fetchAllDocuments();
-    // Convert the Firestore document data into a list of `ItemModel` objects.
-    return rawData.map((element) => ItemModel.fromJson(element)).toList();
+    try {
+      final List<Map<String, dynamic>> rawData =
+          await firestoreService.fetchAllDocuments();
+      return rawData.map((element) => ItemModel.fromJson(element)).toList();
+    } catch (e) {
+      log('Error fetching items: $e');
+      rethrow; // Propagate the error for further handling
+    }
   }
 
-  /// Saves a new item to the "items" collection.
-  ///
-  /// This method converts the given `ItemModel` object to a JSON format
-  /// and then saves it to Firestore using the `saveDocument` method.
+  /// Saves a new `ItemModel` to Firestore.
   Future<void> saveItem({required ItemModel itemModel}) async {
-    firestoreService.saveDocument(data: itemModel.toJson());
+    try {
+      await firestoreService.saveDocument(data: itemModel.toJson());
+    } catch (e) {
+      log('Error saving item: $e');
+    }
   }
 
-  /// Fetches a single item by its document ID from the "items" collection.
-  ///
-  /// The method retrieves the document with the given `itemId`, asserts that it exists,
-  /// and then converts it from JSON into an `ItemModel` object.
+  /// Fetches a single `ItemModel` by its ID from Firestore.
   Future<ItemModel> fetchItemByID({required String itemId}) async {
-    final Map<String, dynamic>? rawData =
-        await firestoreService.fetchDocumentById(docId: itemId);
-    assert(rawData != null, "we can't find the item for you");
-    return ItemModel.fromJson(rawData!);
+    try {
+      final Map<String, dynamic>? rawData =
+          await firestoreService.fetchDocumentById(docId: itemId);
+      if (rawData == null) throw Exception("Item not found");
+      return ItemModel.fromJson(rawData);
+    } catch (e) {
+      log('Error fetching item by ID: $e');
+      rethrow;
+    }
   }
 
-  /// Deletes an item by its document ID from the "items" collection.
-  ///
-  /// The method uses the `deleteDocument` method from the Firestore service to remove
-  /// the document with the specified `id`.
+  /// Deletes an item from Firestore by its ID.
   Future<void> deleteItem({required String id}) async {
-    firestoreService.deleteDocument(documentId: id);
+    try {
+      await firestoreService.deleteDocument(documentId: id);
+    } catch (e) {
+      log('Error deleting item: $e');
+    }
+  }
+
+  /// Uploads a file to Firebase Storage and logs the resulting URL.
+  Future<void> uploadFile() async {
+    final FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result == null) return; // No file selected
+
+    final String? filePath = result.paths.firstOrNull;
+    if (filePath == null) return;
+
+    try {
+      final String imageUrl = await firestoreService.uploadFile(
+        filePath: filePath,
+        storagePath: "$imagePath/file.jpg",
+      );
+      log('File uploaded successfully. URL: $imageUrl');
+    } catch (e) {
+      log('Error uploading file: $e');
+    }
+  }
+
+  /// Downloads a file from Firebase Storage to a local directory.
+  Future<void> downloadFile() async {
+    final String? directoryPath = await FilePicker.platform.getDirectoryPath();
+    if (directoryPath == null) return;
+
+    try {
+      await firestoreService.downloadFile(
+        storagePath: "$imagePath/file.jpg",
+        destinationPath: "$directoryPath/file.jpg",
+      );
+      log('File downloaded successfully');
+    } catch (e) {
+      log('Error downloading file: $e');
+    }
+  }
+
+  /// Deletes a file from Firebase Storage.
+  Future<void> deleteFile() async {
+    try {
+      await firestoreService.deleteFile(storagePath: "$imagePath/file.jpg");
+      log('File deleted successfully');
+    } catch (e) {
+      log('Error deleting file: $e');
+    }
   }
 }
 
-/// `ItemModel` represents an item in the "items" collection, with fields for `id`, `name`,
-/// and `price`.
+/// Represents an item with `id`, `name`, and `price` fields.
 class ItemModel {
   final String id;
   final String name;
   final double price;
 
-  /// Constructor to create an `ItemModel` object with the required fields.
-  ItemModel({
-    required this.id,
-    required this.name,
-    required this.price,
-  });
+  /// Constructor to create an `ItemModel`.
+  ItemModel({required this.id, required this.name, required this.price});
 
-  /// Factory constructor to create an `ItemModel` from a JSON object.
+  /// Creates an `ItemModel` from JSON.
   factory ItemModel.fromJson(Map<String, dynamic> json) {
     return ItemModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      price: (json['price'] as num)
-          .toDouble(), // Ensure the price is converted to a double.
+      price: (json['price'] as num).toDouble(),
     );
   }
 
-  /// Converts an `ItemModel` object into a JSON object.
+  /// Converts `ItemModel` to JSON.
   Map<String, dynamic> toJson() {
     return {
       'id': id,

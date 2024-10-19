@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_facilitator/mixin/helper/operation_runner.dart';
-import 'package:firebase_facilitator_example/repository/read_repos_example.dart';
+import 'package:firebase_facilitator_example/repository/read_repository_example.dart';
 import 'package:firebase_facilitator_example/repository/write_repos_example.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';

@@ -22,6 +22,8 @@ abstract class FirestoreReadService {
   /// Returns a Future that resolves to a List of Maps, where each Map represents the data
   /// of a document in the collection.
   Future<List<Map<String, dynamic>>> fetchAllDocuments(String collection);
+
+  Query getCollectionReference(String collection);
 }
 
 /// Implementation of FirestoreReadService
@@ -62,5 +64,10 @@ class FirestoreServiceImpl implements FirestoreReadService {
         await FirebaseFirestore.instance.collection(collection).get();
     // Convert the documents to a list of Maps containing their data
     return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  @override
+  Query<Object?> getCollectionReference(String collection) {
+    return FirebaseFirestore.instance.collection(collection);
   }
 }
