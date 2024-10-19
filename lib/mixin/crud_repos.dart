@@ -67,7 +67,7 @@ mixin FirestoreReadRepository {
   /// [lastDocument] is the last document from the previous page used to fetch the next page.
   ///
   /// Returns a Future containing a Map with the list of documents and the last document fetched.
-  Future<Map<String, dynamic>> fetchPaginatedDocuments({
+  Future<PaginationResult> fetchPaginatedDocuments({
     int limit = 10,
     DocumentSnapshot? lastDocument,
     String orderByField = 'createdAt',
@@ -87,18 +87,15 @@ mixin FirestoreReadRepository {
 
       final querySnapshot = await query.get();
 
-      final documents = querySnapshot.docs
+      final List<Map<String, dynamic>> documents = querySnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
 
       // Get the last document to use for pagination in the next call
-      final lastDoc =
+      final QueryDocumentSnapshot<Object?>? lastDoc =
           querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
 
-      return {
-        'documents': documents,
-        'lastDocument': lastDoc,
-      };
+      return PaginationResult(documents, lastDoc);
     } catch (e) {
       const errorMessage = 'Error fetching paginated documents';
       loggerService?.logError(errorMessage, e.toString());
@@ -208,4 +205,11 @@ mixin AuthRepository {
       throw Exception('User not authenticated');
     }
   }
+}
+
+class PaginationResult {
+  final List<Map<String, dynamic>> documents;
+  final QueryDocumentSnapshot<Object?>? lastDocument;
+
+  PaginationResult(this.documents, this.lastDocument);
 }

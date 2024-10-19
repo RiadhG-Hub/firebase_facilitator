@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_facilitator/mixin/crud_repos.dart';
 import 'package:firebase_facilitator/mixin/firestore_read_service.dart';
@@ -51,6 +52,53 @@ class ItemRepository {
       log('Error fetching items: $e');
       rethrow; // Propagate the error for further handling
     }
+  }
+
+  /// Fetches a paginated set of documents from Firestore.
+  ///
+  /// This function retrieves a specified number of documents (`limit`) from a Firestore
+  /// collection, starting either from the first document or from the document specified by
+  /// `lastDocument` (to continue pagination). The documents are ordered by a specified field
+  /// (`orderByField`), with a default ordering by the 'createdAt' field.
+  ///
+  /// Pagination is a technique for fetching data in chunks rather than loading all the documents
+  /// at once, which can improve performance and reduce memory usage.
+  ///
+  /// Parameters:
+  /// - [limit] (optional): The maximum number of documents to fetch in this page. Default is 10.
+  /// - [lastDocument] (optional): A reference to the last document fetched in the previous page. If provided,
+  ///   this will start the next page after this document. If not provided, the function will fetch from the beginning.
+  /// - [orderByField] (optional): The Firestore field used to order the documents. Default is 'createdAt'.
+  ///
+  /// Returns:
+  /// - A [PaginationResult] object containing the fetched documents and other pagination-related data.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final PaginationResult result = await fetchPaginatedDocuments(
+  ///   limit: 20,
+  ///   lastDocument: lastDocument, // lastDocument from the previous page
+  ///   orderByField: 'updatedAt',
+  /// );
+  /// ```
+  ///
+  /// This function makes use of a `firestoreService` that contains a method `fetchPaginatedDocuments`
+  /// responsible for handling the Firestore read operation.
+  Future<PaginationResult> fetchPaginatedDocuments({
+    int limit = 10,
+    DocumentSnapshot? lastDocument,
+    String orderByField = 'createdAt',
+  }) async {
+    // Fetch the paginated documents from Firestore using the provided parameters.
+    final PaginationResult paginationResult =
+        await firestoreService.fetchPaginatedDocuments(
+      limit: limit,
+      lastDocument: lastDocument,
+      orderByField: orderByField,
+    );
+
+    // Return the fetched result, which includes documents and pagination metadata.
+    return paginationResult;
   }
 
   /// Saves a new `ItemModel` to Firestore.
