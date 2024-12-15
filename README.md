@@ -15,10 +15,11 @@ logging functionality.
 ## Requirements
 
 * Flutter >= 3.3.0
-* `cloud_firestore: ^5.4.4`
+* `cloud_firestore: ^5.5.1`
 * `fake_cloud_firestore: ^3.0.3`
-* `firebase_auth: ^5.3.1` (optional, for authentication)
-* `firebase_core: ^3.6.0`
+* `firebase_auth: ^5.3.4` (optional, for authentication)
+* `firebase_core: ^3.8.1`
+* `firebase_storage: ^12.3.7`
 * `logger: ^2.4.0` (optional, for logging)
 
 ## Usage
