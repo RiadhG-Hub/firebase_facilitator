@@ -30,3 +30,6 @@
 ## 1.0.1
 ## update demo usage
 ## add firebase storage service
+
+## 1.1.8
+## add web support
